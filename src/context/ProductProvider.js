@@ -7,7 +7,6 @@ const PRODUCT_CONTEXT = createContext();
 const ProductProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  console.log(state);
 
   useEffect(() => {
     dispatch({ type: actionTypes.FETCHING_START });

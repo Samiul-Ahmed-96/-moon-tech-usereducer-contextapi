@@ -7,6 +7,7 @@ const Cart = () => {
     state: { cart, loading, error },
   } = useProducts();
 
+
   let content;
 
   if (loading) {

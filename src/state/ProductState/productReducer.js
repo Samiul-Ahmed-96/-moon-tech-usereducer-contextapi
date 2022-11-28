@@ -4,7 +4,7 @@ export const initialState = {
     loading : false,
     products : [],
     error : false,
-    cart:[]
+    cart:[],
 };
 
 export const reducer = (state,action) =>{ 
@@ -32,6 +32,12 @@ export const reducer = (state,action) =>{
         return{
             ...state,
             cart:[...state.cart , action.payload]
+        }
+        case actionTypes.REMOVE_FROM_CART : 
+        return{
+            ...state,
+            cart: state.cart.filter(item => item.id !== action.payload)
+        
         }
         default:
         return state;
