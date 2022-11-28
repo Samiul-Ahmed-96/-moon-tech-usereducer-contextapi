@@ -1,30 +1,42 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useReducer } from "react";
+import { actionTypes } from "../state/ProductState/actionTypes";
+import { initialState, reducer } from "../state/ProductState/productReducer";
 
 const PRODUCT_CONTEXT = createContext();
 
-const ProductProvider = ({children}) => {
+const ProductProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-const [data , setData] = useState([]);
+  console.log(state);
 
-useEffect(()=>{
-    fetch('./products.json')
-    .then(res => res.json())
-    .then(data => setData(data))
-},[])
+  useEffect(() => {
+    dispatch({ type: actionTypes.FETCHING_START });
+    fetch("./products.json")
+      .then((res) => res.json())
+      .then((data) =>
+        dispatch({ type: actionTypes.FETCHING_SUCCESS, payload: data })
+      )
+      .catch(() => {
+        dispatch({ type: actionTypes.FETCHING_ERROR });
+      });
+  }, []);
 
-const value = {
-    data : data
-}
+  const value = {
+    state,
+    dispatch,
+  };
 
   return (
-    <PRODUCT_CONTEXT.Provider value={value}>{children}</PRODUCT_CONTEXT.Provider>
-  )
-}
+    <PRODUCT_CONTEXT.Provider value={value}>
+      {children}
+    </PRODUCT_CONTEXT.Provider>
+  );
+};
 
 //Custom Product hook
-export const useProducts = () =>{
-   const context  =  useContext(PRODUCT_CONTEXT)
-   return context;
-}
+export const useProducts = () => {
+  const context = useContext(PRODUCT_CONTEXT);
+  return context;
+};
 
-export default ProductProvider
+export default ProductProvider;
